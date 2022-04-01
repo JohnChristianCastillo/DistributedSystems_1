@@ -1,0 +1,41 @@
+.leaflet-control-container{
+    position: absolute;
+    right:56px;
+}
+#map{
+    height: 100vh;
+    width: 100%;
+    position: relative;
+}
+
+.formBlock{
+    max-width: 300px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 10px;
+    z-index: 999;
+    box-shadow: 0 1px rgba(0,0,0,0.65);
+    border-radius: 5px;
+    width: 100%;
+}
+.input{
+    box-sizing: border-box;
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #ddd;
+    font-size: 15px;
+    border-radius: 3px;
+}
+
+#form{
+    padding: 0;
+    margin: 0;
+}
+
+input:nth-child(i){
+    margin-bottom: 10px;
+}
+

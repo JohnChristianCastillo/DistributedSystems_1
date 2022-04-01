@@ -8,10 +8,11 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 
+var dir =
 $(document).ready(function(){
     var $data = $('#data')
     $.ajax({
-        url: "http://127.0.0.1:5000/api/stations",
+        url: "http://127.0.0.1:5001/api/stations",
         type: "GET",
         success: function (data){
             $.each(data.station, function(i, station_i){

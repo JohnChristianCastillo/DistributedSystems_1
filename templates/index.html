@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Map Routes</title>
+    <link rel="stylesheet" href="../static/style.css">
     <!-- leaflet css -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
@@ -18,12 +19,13 @@
 <body>
     <!-- Create an element where the map will take place -->
     <div id="map"></div>
-
-    <style>
-        #map { height: 700px; }
-        #map { width: 1000px; }
-    </style>
-
+    <div class="formBlock">
+        <form id = "form">
+            <input type = "text" name="start" class = "input" id = "start" placeholder="choose starting point">
+            <input type = "text" name="end" class = "input" id = "end" placeholder="choose destination">
+            <button type="submit">Get Direction</button>
+        </form>
+    </div>
 <!-- leaflet js-->
  <script src="{{ url_for('static', filename='main.js') }}"></script>
 
