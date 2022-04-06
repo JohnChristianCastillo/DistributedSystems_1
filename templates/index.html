@@ -21,9 +21,10 @@
     <div id="map"></div>
     <div class="formBlock">
         <form id = "form">
-            <input type = "text" name="start" class = "input" id = "start" placeholder="choose starting point">
-            <input type = "text" name="end" class = "input" id = "end" placeholder="choose destination">
-            <button type="submit">Get Direction</button>
+            <input type = "text" name="start" class = "input" id = "start" placeholder="choose starting point" readonly>
+            <input type = "text" name="end" class = "input" id = "end" placeholder="choose destination" readonly>
+            <button type = "button" id="calculateDirection">Get Direction</button>
+            <button type = "button" id="clear">Clear</button>
         </form>
     </div>
 <!-- leaflet js-->
