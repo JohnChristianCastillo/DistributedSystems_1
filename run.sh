@@ -8,4 +8,4 @@ sudo docker run -t -i -p 5000:5000 -v "${PWD}:/data" osrm/osrm-backend osrm-rout
 
 
 
-curl "http://127.0.0.1:5001/route/v1/driving/51.208115,4.421172;51.210481,4.414177?steps=true"
+curl "http://127.0.0.1:5000/route/v1/driving/51.208115,4.421172;51.210481,4.414177?steps=true"

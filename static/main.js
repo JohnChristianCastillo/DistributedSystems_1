@@ -6,7 +6,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         '<a href="https://www.onderwijskiezer.be/v2/hoger/hoger_vestigingen.php">Onderwijskiezer</a>, ' +
         '<a href="https://www.goudengids.be/">Gouden Gids</a> contributors'
 }).addTo(map);
-
 var dir =
 $(document).ready(function(){
     var $data = $('#data')
@@ -53,9 +52,11 @@ let state = {
     to: null,
     fromName: null,
     toName: null,
+    longitude: null,
+    latitude: null
 }
 
-function doRouting(station, marker){
+function doRouting(station){
     if(!state.fromClicked && station.name !== state.toName){
         state.fromClicked = true;
         state.from = station;
@@ -94,16 +95,32 @@ document.getElementById("clear").addEventListener("click", function(){
     console.log(state);
     $('#start').val(null);
     $('#end').val(null);
+    $('#trainTime').val(null);
+    $('#carTime').val(null);
 })
 
+let outtt = null
 // Clear button click
 document.getElementById("calculateDirection").addEventListener("click", function(){
-    alert("calculating direction");
+    //alert("calculating direction");
+    //alert(state.from.locationY);
     $.ajax({
-        url: "http://127.0.0.1:5000/route/v1/driving/51.208115,4.421172;51.210481,4.414177?steps=true",
+        url: `http://127.0.0.1:5001/api/connections`,
+        data: {
+            from: $('#start').val(),
+            to: $('#end').val(),
+            fromLocationX: state.from.locationX,
+            fromLocationY: state.from.locationY,
+            toLocationX: state.to.locationX,
+            toLocationY: state.to.locationY
+        },
         type: "GET",
         success: function (data){
+            outtt = data;
+            $('#trainTime').val(data["train"])
+            $('#carTime').val(data["car"])
             console.log(data);
+            console.log(data["train"]);
             //console.log(data.station)
             //console.log("done printing stations:")
             //console.log(data);

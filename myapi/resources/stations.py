@@ -12,6 +12,3 @@ class Stations(Resource):
         response = requests.request("GET", url, headers=headers, data=payload)
 
         return response.json()
-
-    def post(self):
-        pass
