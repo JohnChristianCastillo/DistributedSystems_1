@@ -117,7 +117,12 @@ document.getElementById("calculateDirection").addEventListener("click", function
         type: "GET",
         success: function (data){
             outtt = data;
-            $('#trainTime').val(data["train"])
+            if('error' in data){
+                $('#trainTime').val(data["message"])
+            }
+            else{
+                $('#trainTime').val(data["train"])
+            }
             $('#carTime').val(data["car"])
             console.log(data);
             console.log(data["train"]);

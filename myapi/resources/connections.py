@@ -1,9 +1,7 @@
 import datetime
-import json
 
 from flask_restful import Resource, reqparse
 import requests
-import pprint
 
 class Connections(Resource):
     def get(self):  # calculate time between two stations
@@ -32,17 +30,22 @@ class Connections(Resource):
         trainUrl = "https://api.irail.be/connections/"
         response = requests.request("GET", trainUrl, params={"from":args["from"], "to":args["to"], "format": format, "lang":lang})
         response = response.json()
+
+        retVal = {}
         trainResponse = ''
         if('error' in response):
-            trainResponse = response['message']
+            retVal['error'] = response['error']
+            retVal['message'] = response['message']
         else:
             trainResponse = response['connection'][0]['duration']
             trainResponse = str(datetime.timedelta(seconds=int(trainResponse)))
+            retVal['train'] = trainResponse
         carUrl = f"http://127.0.0.1:5000/route/v1/driving/{args['fromLocationX']},{args['fromLocationY']};{args['toLocationX']},{args['toLocationY']}?steps=false"
         response = requests.request("GET", carUrl)
         response = response.json()
         carResponse = response['routes'][0]['duration']
         #todo: what if there is no route
         carResponse = str(datetime.timedelta(seconds=carResponse))
-        return {"train": trainResponse, "car": carResponse}
+        retVal['car'] = carResponse
+        return retVal
 
