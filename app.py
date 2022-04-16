@@ -1,6 +1,5 @@
 from flask import Flask
 from flask_restful import Api
-from myapi.resources.foo import Foo
 from myapi.resources.stations import Stations
 from myapi.resources.connections import Connections
 
