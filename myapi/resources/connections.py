@@ -7,16 +7,8 @@ class Connections(Resource):
     def get(self):  # calculate time between two stations
         # vb: api.irail.be/connections/?from=Gent-Sint-Pieters&to=Mechelen&date=070422&time=1230&timesel=departure&format=json&lang=en&typeOfTransport=automatic&alerts=false&results=6
 
-        start = ""
-        destination = ""
-        date = ""
-        time = ""
-        timesel = "departure"
         format = "json"
         lang = "en"
-        typeOfTransport = "automatic"
-        alerts = "false"
-        results = "6"
 
         parser = reqparse.RequestParser()
         parser.add_argument('from', type=str, help='Start station needs to be specified')
@@ -40,7 +32,7 @@ class Connections(Resource):
             trainResponse = response['connection'][0]['duration']
             trainResponse = str(datetime.timedelta(seconds=int(trainResponse)))
             retVal['train'] = trainResponse
-        carUrl = f"http://127.0.0.1:5000/route/v1/driving/{args['fromLocationX']},{args['fromLocationY']};{args['toLocationX']},{args['toLocationY']}?steps=false"
+        carUrl = f"http://router.project-osrm.org/route/v1/driving/{args['fromLocationX']},{args['fromLocationY']};{args['toLocationX']},{args['toLocationY']}?steps=false"
         response = requests.request("GET", carUrl)
         response = response.json()
         carResponse = response['routes'][0]['duration']

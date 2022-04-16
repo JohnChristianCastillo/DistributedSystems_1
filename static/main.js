@@ -64,15 +64,22 @@ $(document).ready(function(){
                         }
                     })
                 var option = document.createElement("option");
-                document.getElementById("start").appendChild(option);
+                var option2 = document.createElement("option");
                 option.textContent = station_i.name;
                 option.value = station_i.name;
+                option2.textContent = station_i.name;
+                option2.value = station_i.name;
+                document.getElementById("start").appendChild(option);
+                document.getElementById("end").appendChild(option2);
+
+
                 markers.push(marker);
                 stations.push(station_i);
                 //console.log(station_i.name)
                 //console.log(station_i.locationX + "---" + station_i.locationY + "===" + station_i.name )
             })
             alphabetizeList('#start');
+            alphabetizeList('#end');
 
             //console.log(data.station)
             //console.log("done printing stations:")
@@ -152,7 +159,7 @@ function doRouting(station, changeStart = false, changeDest = false){
         console.log("end station Resetted");
     }
 }
-// Clear button click
+// start selection interaction
 document.getElementById("start").addEventListener("click", function(){
     var e = document.getElementById("start");
     var val = e.value;
@@ -160,6 +167,18 @@ document.getElementById("start").addEventListener("click", function(){
         if(stations[i].name == val){
             map.flyTo(new L.LatLng(stations[i].locationY, stations[i].locationX), 13);
             doRouting(stations[i], true, false);
+            break;
+        }
+    }
+})
+// destination selection interaction
+document.getElementById("end").addEventListener("click", function(){
+    var e = document.getElementById("end");
+    var val = e.value;
+    for(var i = 0; i < stations.length; ++i){
+        if(stations[i].name == val){
+            map.flyTo(new L.LatLng(stations[i].locationY, stations[i].locationX), 13);
+            doRouting(stations[i], false, true);
             break;
         }
     }
