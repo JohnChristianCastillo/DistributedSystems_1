@@ -17,8 +17,8 @@ class TrainRouting(Resource):
         response = response.json()
         retVal = {}
         if('error' in response):
-            retVal['error'] = response['error']
-            retVal['message'] = response['message']
+            retVal['trainError'] = response['error']
+            retVal['trainMessage'] = "No routes found"
         else:
             trainResponse = response['connection'][0]['duration']
             trainResponse = str(datetime.timedelta(seconds=int(trainResponse)))

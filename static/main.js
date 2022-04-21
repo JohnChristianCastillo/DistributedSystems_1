@@ -52,7 +52,8 @@ $(document).ready(function(){
                             L.popup({
                                 offset: [0, -20]
                             })
-                                .setContent(station_i.name)
+                                //.setContent("name: "+ station_i.name + <br/> + "latitude: " + station_i.locationY + <br/> +"longitude: "+station_i.locationX)
+                                .setContent(`${station_i.name} <br> y-coords: ${station_i.locationY} <br> x-coords: ${station_i.locationX}`)
                                 .setLatLng(e.latlng)
                                 .openOn(map);
                             setTimeout(function (){
@@ -201,13 +202,29 @@ document.getElementById("clear").addEventListener("click", function(){
 
 // Clear button click
 document.getElementById("calculateDirection").addEventListener("click", function(){
-    //alert("calculating direction");
-    //alert(state.from.locationY);
+    //call trainRouting API
     $.ajax({
-        url: `http://127.0.0.1:5001/api/connections`,
+        url: `http://127.0.0.1:5001/api/trainTime`,
         data: {
             from: $('#start').val(),
             to: $('#end').val(),
+        },
+        type: "GET",
+        success: function (data){
+            if('trainError' in data){
+                $('#trainTime').val("No results found")
+            }
+            else{
+                $('#trainTime').val(data["train"])
+            }
+        },
+        error: function (error){
+            console.log(error);
+        }
+    })
+    $.ajax({
+        url: `http://127.0.0.1:5001/api/carTime`,
+        data: {
             fromLocationX: state.from.locationX,
             fromLocationY: state.from.locationY,
             toLocationX: state.to.locationX,
@@ -215,22 +232,17 @@ document.getElementById("calculateDirection").addEventListener("click", function
         },
         type: "GET",
         success: function (data){
-            if('error' in data){
-                $('#trainTime').val(data["message"])
+            if('carError' in data){
+                $('#carTime').val("No results found")
             }
             else{
-                $('#trainTime').val(data["train"])
+                $('#carTime').val(data["car"])
             }
-            $('#carTime').val(data["car"])
-            console.log(data);
-            console.log(data["train"]);
-            //console.log(data.station)
-            //console.log("done printing stations:")
-            //console.log(data);
         },
         error: function (error){
             console.log(error);
         }
     })
+
 })
 
