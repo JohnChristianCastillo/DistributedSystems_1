@@ -26,6 +26,14 @@ class CarRouting(Resource):
             retVal['carError'] = response['message']
             retVal['carMessage'] = "Invalid Query"
         else:
+            if(response['waypoints'][0]['name'] == ""):
+                retVal['Starting point'] = "Starting point is not recognized by OSRM"
+            else:
+                retVal['Starting point'] = response['waypoints'][0]['name']
+            if(response['waypoints'][-1]['name'] == ""):
+                retVal['Destination'] = "Destination is not recognized by OSRM"
+            else:
+                retVal['Destination'] = response['waypoints'][-1]['name']
             carResponse = response['routes'][0]['duration']
             carResponse = str(datetime.timedelta(seconds=carResponse))
             retVal['Travel time'] = carResponse

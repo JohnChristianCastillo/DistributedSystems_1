@@ -10,7 +10,6 @@ app = Flask(__name__)
 api = Api(app)
 
 api.add_resource(Stations, '/api/stations')
-
 api.add_resource(CarRouting, '/api/carTime')
 api.add_resource(TrainRouting, '/api/trainTime')
 
@@ -18,6 +17,7 @@ api.add_resource(TrainRouting, '/api/trainTime')
 @app.route("/")
 def hello():
     return render_template('index.html')
+
 
 if __name__ == '__main__':
     app.run(port=5001, debug=True)

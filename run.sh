@@ -10,3 +10,6 @@ cd osrm
 
 
 #curl "http://127.0.0.1:5000/route/v1/driving/51.208115,4.421172;51.210481,4.414177?steps=true"
+
+pip install -r requirements.txt
+python app.py

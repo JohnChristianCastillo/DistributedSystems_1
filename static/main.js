@@ -33,8 +33,26 @@ var markers = [];
 var stations = [];
 
 
+/**
+ *  Create a "state" object
+ */
+let state = {
+    fromClicked: false,
+    toClicked: false,
+    from: null,
+    to: null,
+    fromName: null,
+    toName: null,
+    longitude: null,
+    latitude: null,
+    fromMarker: null,
+    toMarker: null
+}
+
+/**
+ * Acts as the main body
+ */
 var dir = $(document).ready(function(){
-    var $data = $('#data')
     $.ajax({
         url: "http://127.0.0.1:5001/api/stations",
         type: "GET",
@@ -87,21 +105,6 @@ var dir = $(document).ready(function(){
     })
 })
 
-
-
-let state = {
-    fromClicked: false,
-    toClicked: false,
-    from: null,
-    to: null,
-    fromName: null,
-    toName: null,
-    longitude: null,
-    latitude: null,
-    fromMarker: null,
-    toMarker: null
-}
-
 /**
  * Helper function to alphabetize the dropdown list of train stations
  * @param listField: Field of which we want to alphabetize
@@ -136,7 +139,7 @@ function doRouting(station, changeStart = false, changeDest = false){
     }
 
     // We always want to first fill in the initial station before the destination station
-    if((!state.fromClicked && station.name !== state.toName) || changeStart){
+    if((!state.fromClicked && station.name !== state.toName && !changeDest) || changeStart){
         if(state.fromClicked){ //this is for whenever a change is done via selection and not by map
             state.fromMarker.setIcon(defaultIcon);
         }
@@ -181,20 +184,27 @@ function doRouting(station, changeStart = false, changeDest = false){
 
 /**
  *  A "Listener" type which helps us detect whether the initial station has been chosen.
- *  After choosing, we then call the function which properly processes the given data
+ *  After choosing, we then pan over the selected station
+ *  and afterwards we call the function which properly processes the given data
  */
 // start selection interaction
 document.getElementById("start").addEventListener("click", function(){
     var e = document.getElementById("start");
     var val = e.value;
     for(var i = 0; i < stations.length; ++i){
-        if(stations[i].name == val){
+        if(stations[i].name === val){
             map.flyTo(new L.LatLng(stations[i].locationY, stations[i].locationX), 13);
             doRouting(stations[i], true, false);
             break;
         }
     }
 })
+
+/**
+ *  A "Listener" type which helps us detect whether the destination station has been chosen.
+ *  After choosing, we then pan over the selected station
+ *  and afterwards we call the function which properly processes the given data
+ */
 // destination selection interaction
 document.getElementById("end").addEventListener("click", function(){
     var e = document.getElementById("end");
@@ -207,6 +217,12 @@ document.getElementById("end").addEventListener("click", function(){
         }
     }
 })
+
+/**
+ *  A "Listener" type which helps us detect whether the clear button has been pressed.
+ *  After choosing, we then pan over the selected station
+ *  and afterwards we call the function which properly processes the given data
+ */
 // Clear button click
 document.getElementById("clear").addEventListener("click", function(){
     if(state.fromMarker){
@@ -224,12 +240,12 @@ document.getElementById("clear").addEventListener("click", function(){
 })
 
 /**
- * A "Listener" which detects whether the
- * calculate the travel time both by train and by car. Both of which makes use of Get requests to
+ * A "Listener" which detects whether the "Calculate Time" button is clicked
+ * Calculates the travel time both by train and by car. Both of which makes use of Get requests to
  * this projects' own API endpoints
  */
 document.getElementById("calculateTime").addEventListener("click", function(){
-    //call trainRouting API
+    // call trainRouting API
     $.ajax({
         url: `http://127.0.0.1:5001/api/trainTime`,
         data: {
@@ -249,6 +265,7 @@ document.getElementById("calculateTime").addEventListener("click", function(){
             console.log(error);
         }
     })
+    // call carRouting API
     $.ajax({
         url: `http://127.0.0.1:5001/api/carTime`,
         data: {
@@ -270,6 +287,5 @@ document.getElementById("calculateTime").addEventListener("click", function(){
             console.log(error);
         }
     })
-
 })
 
