@@ -2,8 +2,13 @@ import datetime
 from flask_restful import Resource, reqparse
 import requests
 
+
 class CarRouting(Resource):
-    def get(self):  # calculate time between two stations
+    def get(self):
+        """
+        Calculates the travel time from a given train station to another destination station by means of a car
+        :return: The travel time split in Hours:Minutes:Seconds
+        """
         parser = reqparse.RequestParser()
         parser.add_argument('fromLocationX', type=str, help='Invalid longitude value for source')
         parser.add_argument('fromLocationY', type=str, help='Invalid latitude value for source')
@@ -16,12 +21,13 @@ class CarRouting(Resource):
         carUrl = f"http://router.project-osrm.org/route/v1/driving/{args['fromLocationX']},{args['fromLocationY']};{args['toLocationX']},{args['toLocationY']}?steps=false"
         response = requests.request("GET", carUrl)
         response = response.json()
+        # check whether the response we got from osrm is valid
         if ('code' in response and response['code'] != "Ok"):
             retVal['carError'] = response['message']
             retVal['carMessage'] = "Invalid Query"
         else:
             carResponse = response['routes'][0]['duration']
             carResponse = str(datetime.timedelta(seconds=carResponse))
-            retVal['car'] = carResponse
+            retVal['Travel time'] = carResponse
         return retVal
 

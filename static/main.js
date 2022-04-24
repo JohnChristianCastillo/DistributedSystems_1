@@ -1,5 +1,7 @@
+/**
+ * Initialize the map object
+ */
 var map = L.map('map').setView([51.219007, 4.421005], 13);
-// add a tile layer to the (empty) map
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, ' +
         '<a href="https://www.google.com/maps">Google Maps</a>, ' +
@@ -7,6 +9,9 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         '<a href="https://www.goudengids.be/">Gouden Gids</a> contributors'
 }).addTo(map);
 
+/**
+ *  Create custom icons for custom markers
+ */
 var iconSetting = L.Icon.extend({
     options: {
         iconSize: [40.4, 44],
@@ -27,18 +32,8 @@ var defaultIcon = new iconSetting({
 var markers = [];
 var stations = [];
 
-function alphabetizeList(listField) {
-    var sel = $(listField);
-    var selected = sel.val(); // cache selected value, before reordering
-    var opts_list = sel.find('option');
-    opts_list.sort(function (a, b) {
-        return $(a).text() > $(b).text() ? 1 : -1;
-    });
-    sel.html('').append(opts_list);
-    sel.val(selected); // set cached selected value
-}
-var dir =
-$(document).ready(function(){
+
+var dir = $(document).ready(function(){
     var $data = $('#data')
     $.ajax({
         url: "http://127.0.0.1:5001/api/stations",
@@ -107,13 +102,40 @@ let state = {
     toMarker: null
 }
 
+/**
+ * Helper function to alphabetize the dropdown list of train stations
+ * @param listField: Field of which we want to alphabetize
+ */
+function alphabetizeList(listField) {
+
+    var sel = $(listField);
+    var selected = sel.val(); // cache selected value, before reordering
+    var opts_list = sel.find('option');
+    opts_list.sort(function (a, b) {
+        return $(a).text() > $(b).text() ? 1 : -1;
+    });
+    sel.html('').append(opts_list);
+    sel.val(selected); // set cached selected value
+}
+
+/**
+ * Helper function to store and display the data which is sent in by the user interacting with the website
+ * @param station: The station clicked/selected
+ * @param changeStart: Boolean variable that is derived from interacting with the dropdown selection menu
+ *                     telling us whether the starting station should be changed or not
+ * @param changeDest: Boolean variable that is derived from interacting with the dropdown selection menu
+ *                     telling us whether the destination station should be changed or not
+ */
 function doRouting(station, changeStart = false, changeDest = false){
-    var mark = null;
+    var mark = null; // object pointing to the correct marker we interacted with
+    // loop through all the markers to find the interacted station
     for(var i = 0; i<markers.length; ++i){
-        if(markers[i].options.name == station.name){
+        if(markers[i].options.name === station.name){
             mark = markers[i];
         }
     }
+
+    // We always want to first fill in the initial station before the destination station
     if((!state.fromClicked && station.name !== state.toName) || changeStart){
         if(state.fromClicked){ //this is for whenever a change is done via selection and not by map
             state.fromMarker.setIcon(defaultIcon);
@@ -124,8 +146,6 @@ function doRouting(station, changeStart = false, changeDest = false){
         state.from = station;
         state.fromName = station.name
         $('#start').val(state.fromName);
-        console.log("From station clicked");
-        console.log(changeStart);
     }
     // click second station
     else if((state.fromClicked && !state.toClicked && station.name !== state.fromName) || changeDest){
@@ -138,9 +158,8 @@ function doRouting(station, changeStart = false, changeDest = false){
         state.to = station;
         state.toName = station.name;
         $('#end').val(state.toName);
-        console.log("end station clicked");
     }
-    // remove from
+    // This allows us to remove the initial station selected
     else if(state.fromClicked && station.name === state.fromName){
         mark.setIcon(defaultIcon);
         state.fromMarker = null;
@@ -148,8 +167,8 @@ function doRouting(station, changeStart = false, changeDest = false){
         state.from = null;
         state.fromName = null;
         $('#start').val(null);
-        console.log("start station Resetted");
     }
+    // This allows us to remove the destinations station selected
     else if(state.toClicked && station.name === state.toName){
         mark.setIcon(defaultIcon);
         state.toMarker = null;
@@ -157,9 +176,13 @@ function doRouting(station, changeStart = false, changeDest = false){
         state.to = null;
         state.toName = null;
         $('#end').val(null);
-        console.log("end station Resetted");
     }
 }
+
+/**
+ *  A "Listener" type which helps us detect whether the initial station has been chosen.
+ *  After choosing, we then call the function which properly processes the given data
+ */
 // start selection interaction
 document.getElementById("start").addEventListener("click", function(){
     var e = document.getElementById("start");
@@ -200,8 +223,12 @@ document.getElementById("clear").addEventListener("click", function(){
     $('#carTime').val(null);
 })
 
-// Clear button click
-document.getElementById("calculateDirection").addEventListener("click", function(){
+/**
+ * A "Listener" which detects whether the
+ * calculate the travel time both by train and by car. Both of which makes use of Get requests to
+ * this projects' own API endpoints
+ */
+document.getElementById("calculateTime").addEventListener("click", function(){
     //call trainRouting API
     $.ajax({
         url: `http://127.0.0.1:5001/api/trainTime`,
@@ -215,7 +242,7 @@ document.getElementById("calculateDirection").addEventListener("click", function
                 $('#trainTime').val("No results found")
             }
             else{
-                $('#trainTime').val(data["train"])
+                $('#trainTime').val(data["Travel time"])
             }
         },
         error: function (error){
@@ -236,7 +263,7 @@ document.getElementById("calculateDirection").addEventListener("click", function
                 $('#carTime').val("No results found")
             }
             else{
-                $('#carTime').val(data["car"])
+                $('#carTime').val(data["Travel time"])
             }
         },
         error: function (error){
