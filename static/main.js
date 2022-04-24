@@ -210,7 +210,7 @@ document.getElementById("end").addEventListener("click", function(){
     var e = document.getElementById("end");
     var val = e.value;
     for(var i = 0; i < stations.length; ++i){
-        if(stations[i].name == val){
+        if(stations[i].name === val){
             map.flyTo(new L.LatLng(stations[i].locationY, stations[i].locationX), 13);
             doRouting(stations[i], false, true);
             break;
@@ -250,7 +250,7 @@ document.getElementById("calculateTime").addEventListener("click", function(){
         url: `http://127.0.0.1:5001/api/trainTime`,
         data: {
             from: $('#start').val(),
-            to: $('#end').val(),
+            to: $('#end').val()
         },
         type: "GET",
         success: function (data){

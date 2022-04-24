@@ -1,6 +1,5 @@
 from flask_restful import Resource
 import requests
-import pprint
 
 
 class Stations(Resource):
@@ -14,5 +13,4 @@ class Stations(Resource):
         headers = {}
 
         response = requests.request("GET", url, headers=headers, data=payload)
-
         return response.json()
