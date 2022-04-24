@@ -52,9 +52,10 @@ let state = {
 /**
  * Acts as the main body
  */
-var dir = $(document).ready(function(){
+var dir = 
+  $(document).ready(function(){
     $.ajax({
-        url: "https://DistributedSystems1.johnchristianca.repl.co/api/stations",
+        url: "https://distributedsystems1.johnchristianca.repl.co//api/stations",
         type: "GET",
         success: function (data){
             $.each(data.station, function(i, station_i){
@@ -247,7 +248,7 @@ document.getElementById("clear").addEventListener("click", function(){
 document.getElementById("calculateTime").addEventListener("click", function(){
     // call trainRouting API
     $.ajax({
-        url: `https://DistributedSystems1.johnchristianca.repl.co/api/trainTime`,
+        url: `https://distributedsystems1.johnchristianca.repl.co/api/trainTime`,
         data: {
             from: $('#start').val(),
             to: $('#end').val()
@@ -267,7 +268,7 @@ document.getElementById("calculateTime").addEventListener("click", function(){
     })
     // call carRouting API
     $.ajax({
-        url: `https://DistributedSystems1.johnchristianca.repl.co/api/carTime`,
+        url: `https://distributedsystems1.johnchristianca.repl.co/api/carTime`,
         data: {
             fromLocationX: state.from.locationX,
             fromLocationY: state.from.locationY,
