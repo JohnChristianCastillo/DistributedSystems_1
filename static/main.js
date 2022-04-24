@@ -54,7 +54,7 @@ let state = {
  */
 var dir = $(document).ready(function(){
     $.ajax({
-        url: "http://127.0.0.1:5001/api/stations",
+        url: "https://DistributedSystems1.johnchristianca.repl.co/api/stations",
         type: "GET",
         success: function (data){
             $.each(data.station, function(i, station_i){
@@ -247,7 +247,7 @@ document.getElementById("clear").addEventListener("click", function(){
 document.getElementById("calculateTime").addEventListener("click", function(){
     // call trainRouting API
     $.ajax({
-        url: `http://127.0.0.1:5001/api/trainTime`,
+        url: `https://DistributedSystems1.johnchristianca.repl.co/api/trainTime`,
         data: {
             from: $('#start').val(),
             to: $('#end').val()
@@ -267,7 +267,7 @@ document.getElementById("calculateTime").addEventListener("click", function(){
     })
     // call carRouting API
     $.ajax({
-        url: `http://127.0.0.1:5001/api/carTime`,
+        url: `https://DistributedSystems1.johnchristianca.repl.co/api/carTime`,
         data: {
             fromLocationX: state.from.locationX,
             fromLocationY: state.from.locationY,
