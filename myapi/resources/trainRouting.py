@@ -19,16 +19,18 @@ class TrainRouting(Resource):
         # format: https://api.irail.be/connections/?from=Gent-Sint-Pieters&to=Mechelen&format=json
         trainUrl = "https://api.irail.be/connections/"
         response = requests.request("GET", trainUrl, params={"from":args["from"], "to":args["to"], "format": format, "lang":lang})
+        statusCode = response.status_code
         response = response.json()
         retVal = {}
+        retVal['statusCode'] = statusCode
         if('error' in response):
-            retVal['trainError'] = response['error']
             retVal['trainMessage'] = "No routes found"
+            return retVal, response['error']
         else:
             retVal['Departure station'] = response['connection'][0]['departure']['station']
             retVal['Destination station'] = response['connection'][0]['arrival']['station']
             trainResponse = response['connection'][0]['duration']
             trainResponse = str(datetime.timedelta(seconds=int(trainResponse)))
             retVal['Travel time'] = trainResponse
-        return retVal
+        return retVal, statusCode
 

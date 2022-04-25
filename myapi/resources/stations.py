@@ -13,4 +13,5 @@ class Stations(Resource):
         headers = {}
 
         response = requests.request("GET", url, headers=headers, data=payload)
-        return response.json()
+        statusCode = response.status_code
+        return response.json(), statusCode

@@ -20,7 +20,9 @@ class CarRouting(Resource):
 
         carUrl = f"http://router.project-osrm.org/route/v1/driving/{args['fromLocationX']},{args['fromLocationY']};{args['toLocationX']},{args['toLocationY']}?steps=false"
         response = requests.request("GET", carUrl)
+        statusCode = response.status_code
         response = response.json()
+        retVal['statusCode'] = statusCode
         # check whether the response we got from osrm is valid
         if ('code' in response and response['code'] != "Ok"):
             retVal['carError'] = response['message']
@@ -37,5 +39,5 @@ class CarRouting(Resource):
             carResponse = response['routes'][0]['duration']
             carResponse = str(datetime.timedelta(seconds=carResponse))
             retVal['Travel time'] = carResponse
-        return retVal
+        return retVal, statusCode
 
