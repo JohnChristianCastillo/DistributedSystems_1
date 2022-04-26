@@ -22,8 +22,16 @@ class TrainRouting(Resource):
         statusCode = response.status_code
         response = response.json()
         retVal = {}
+
         retVal['statusCode'] = statusCode
-        if('error' in response):
+        # special case: if from and to are the same then status will be 500
+        if(statusCode == 500 and args["from"] == args["to"]):
+            retVal['statusCode'] = 200
+            retVal['Departure station'] = args['from']
+            retVal['Destinations tation'] = args['to']
+            retVal['Travel time'] = "0:00:00"
+            return retVal, 200
+        elif('error' in response):
             retVal['trainMessage'] = "No routes found"
             return retVal, response['error']
         else:
